@@ -40,9 +40,9 @@ const Topbar = () => {
             <ion-icon name="log-out-outline"></ion-icon>
           </button>
         </div>
-        <div class="user">
+        {/* <div class="user">
           <ion-icon name="person-circle-outline"></ion-icon>
-        </div>
+        </div> */}
       </div>
     </>
   );
