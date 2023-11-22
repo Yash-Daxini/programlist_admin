@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [login, setLogin] = useState({});
   const [users, setUsers] = useState([]);
@@ -29,14 +31,7 @@ const Login = () => {
           <h2 className="py-3">Program List</h2>
         </div>
         <div className="content container backgroundColorBlueLite">
-          <div
-            class="alert alert-danger"
-            id="loginAlert"
-            role="alert"
-            style={{ visibility: "hidden" }}
-          >
-            <strong>Alert!</strong> Invalid User Name or Password
-          </div>
+          <ToastContainer className="custom-toast-container" />
           <form className="form-group" method="post">
             <h3 class="form-title text-center font-green my-4">Sign In</h3>
             <div class="form-group">
@@ -74,16 +69,25 @@ const Login = () => {
                 onClickCapture={(e) => {
                   e.preventDefault();
                   users.map((user) => {
-                    if (user.user_name === login.name && user.user_password === login.pass) {
+                    if (
+                      user.user_name === login.name &&
+                      user.user_password === login.pass
+                    ) {
                       sessionStorage.setItem("user", JSON.stringify(user));
                       navigate("../");
                     }
-                    return(
-                      <></>
-                    )
+                    return <></>;
                   });
-                  document.getElementById("loginAlert").style.visibility =
-                    "visible";
+                  toast.error(`Invalid User Name or Password`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
                 }}
               >
                 Login
