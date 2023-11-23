@@ -826,3 +826,12 @@ table {
 .deleteAlert{
     border-radius: 30px;
 }
+.insertUpdateToastContainer{
+    width: 75%;
+}
+@media only screen and (max-width:600px){
+    .insertUpdateToastContainer{
+        width: 100%;
+        color: red;
+    }
+}

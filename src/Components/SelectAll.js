@@ -110,6 +110,7 @@ const SelectAll = () => {
                     toast.info(<DeleteButtonToast />, {
                       className: "deleteAlert",
                       containerId: "deleteAlert",
+                      closeButton: false,
                       position: toast.POSITION.TOP_CENTER,
                       hideProgressBar: false,
                       closeOnClick: false,
@@ -182,18 +183,24 @@ const SelectAll = () => {
             <p>{program.difficulty}</p>
           </td>
           <td>
-            <button className="btn btn-outline-info" onClick={() => {}}>
-              <ion-icon id={`editIcon`} name="create-outline"></ion-icon>
-            </button>
-          </td>
-          <td>
             <button
-              className="btn btn-outline-danger"
-              id={`cancelBtnForUpdate`}
-              style={{ display: "none" }}
-              onClick={() => {}}
+              className="btn btn-outline-info"
+              onClick={() => {
+                toast.info(<UpdateToast id={program._id} />, {
+                  className: "insertToast",
+                  closeButton: false,
+                  containerId: "insertUpdate",
+                  position: toast.POSITION.TOP_CENTER,
+                  hideProgressBar: false,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  draggable: true,
+                  autoClose: false,
+                  theme: "light",
+                });
+              }}
             >
-              <ion-icon name="close-outline"></ion-icon>
+              <ion-icon id={`editIcon`} name="create-outline"></ion-icon>
             </button>
           </td>
         </tr>
@@ -231,7 +238,6 @@ const SelectAll = () => {
   };
   const InsertToast = ({ closeToast }) => {
     let [newProgram, setNewProgram] = useState({});
-    console.warn(newProgram);
     return (
       <>
         <div class="mb-3">
@@ -435,7 +441,6 @@ const SelectAll = () => {
             type="submit"
             className="btn btn-outline-danger"
             onClick={(e) => {
-              navigate("../SelectAll");
               closeToast();
             }}
           >
@@ -445,7 +450,21 @@ const SelectAll = () => {
       </>
     );
   };
-
+  const UpdateToast = ({ closeToast, id }) => {
+    return (
+      <>
+        <div>Data can be update soon.</div>
+        <button
+          className="btn btn-outline-danger"
+          onClick={() => {
+            closeToast();
+          }}
+        >
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </>
+    );
+  };
   return (
     <div className="selectAll main">
       <ToastContainer
@@ -456,7 +475,7 @@ const SelectAll = () => {
       <ToastContainer
         enableMultiContainer
         containerId={"insertUpdate"}
-        className="custom-toast-container w-75"
+        className="custom-toast-container insertUpdateToastContainer"
       />
       <div className="d-flex justify-content-between flex-wrap">
         <div>
@@ -540,9 +559,9 @@ const SelectAll = () => {
             className="btn btn-outline-success rounded-3 m-2"
             id="addBtn"
             onClick={() => {
-              // enableAdd();
               toast.info(<InsertToast />, {
                 className: "insertToast",
+                closeButton: false,
                 containerId: "insertUpdate",
                 position: toast.POSITION.TOP_CENTER,
                 hideProgressBar: false,
