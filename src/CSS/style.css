@@ -822,3 +822,7 @@ table {
         /* padding: 0px 0px; */
     }
 }
+/* Toast Styles  */
+.deleteAlert{
+    border-radius: 30px;
+}

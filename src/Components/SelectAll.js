@@ -7,17 +7,12 @@ import Swal from "sweetalert2";
 const SelectAll = () => {
   const navigate = useNavigate();
   const [programObj, setProgramObj] = useState([]);
-  const [newProgram, setNewProgram] = useState({});
-  const [listOrTextAreaBtn, setListOrTextAreaBtn] = useState(
-    "Not Present in list ? Want to add new topic !"
-  );
   const [isAnyChecked, setIsAnyChecked] = useState(false);
   const [filterObj, setFilterObj] = useState({
     program_topic: "all",
     difficulty: "all",
   });
   const [deleteArr, setDeleteArr] = useState([]);
-  const [updateObj, setUpdateObj] = useState({});
   const [filterArr, setFilterArr] = useState([]);
   let isTopicPresent = true;
   useEffect(() => {
@@ -26,7 +21,7 @@ const SelectAll = () => {
     }
   }, [navigate]);
 
-  useEffect(() => {
+  const fetchAllPrgrams = () => {
     fetch(`https://programlist-backend.onrender.com/programs`)
       .then((res) => {
         return res.json();
@@ -36,7 +31,11 @@ const SelectAll = () => {
         setFilterArr(data);
       })
       .catch((e) => {});
-  }, [updateObj, newProgram]);
+  };
+
+  useEffect(() => {
+    fetchAllPrgrams();
+  }, []);
 
   let setForTopic = new Set();
 
@@ -58,9 +57,12 @@ const SelectAll = () => {
 
   const Delete = (id, topic) => {
     if (programObj.filter((ele) => ele.program_topic === topic).length === 1) {
-      fetch(`https://programlist-backend.onrender.com/topic/deleteFromTopic/${topic}`, {
-        method: "DELETE",
-      }).then((res) => {
+      fetch(
+        `https://programlist-backend.onrender.com/topic/deleteFromTopic/${topic}`,
+        {
+          method: "DELETE",
+        }
+      ).then((res) => {
         console.log(topic);
       });
     }
@@ -95,289 +97,22 @@ const SelectAll = () => {
     );
   });
 
-  const enableEditing = (programObj) => {
-    let trTags = document.getElementsByTagName(`tr`);
-    for (let tagKey in trTags) {
-      let tagValue = trTags[tagKey];
-      try {
-        if (
-          tagKey !== "length" &&
-          !tagValue.classList.contains(`display${programObj._id}`)
-        )
-          tagValue.style.filter = "blur(5px)";
-      } catch (exce) {}
-    }
-
-    let displayTags = document.getElementsByClassName(
-      `display${programObj._id}`
-    );
-    for (let tagKey in displayTags) {
-      let tagValue = displayTags[tagKey];
-      try {
-        if (tagValue.tagName !== "TD" && tagValue.tagName !== "TR") {
-          tagValue.style.display = "none";
-        } else if (tagValue.tagName === "TR") {
-          tagValue.style.position = "relative";
-          tagValue.style.left = "30%";
-        } else if (tagValue.tagName === "TD") {
-          tagValue.style.display = "block";
-        }
-      } catch (exce) {}
-    }
-
-    let editTags = document.getElementsByClassName(`edit${programObj._id}`);
-    for (let tagKey in editTags) {
-      let tagValue = editTags[tagKey];
-      try {
-        if (tagKey !== "length") {
-          tagValue.type = "text";
-          tagValue.style.display = "block";
-        }
-      } catch (exce) {}
-    }
-
-    let dropdownForDifficulty = document.getElementsByClassName(
-      `editSelect${programObj._id}`
-    )[0];
-    dropdownForDifficulty.style.display = "block";
-
-    let updateIcon = document.getElementById(`editIcon${programObj._id}`);
-    updateIcon.name = "checkmark-outline";
-
-    let selectionBoxForTopic = document.getElementById(
-      `selectionBoxForTopic${programObj._id}`
-    );
-    selectionBoxForTopic.style.display = "block";
-    // htmlElement.style.display = "block";
-    let cancelBtnForUpdate = document.getElementById(
-      `cancelBtnForUpdate${programObj._id}`
-    );
-    cancelBtnForUpdate.style.display = "block";
-  };
-
-  const disableEditing = (programObj, updatedDataObj) => {
-    let trTags = document.getElementsByTagName(`tr`);
-    for (let tagKey in trTags) {
-      let tagValue = trTags[tagKey];
-      try {
-        if (
-          tagKey !== "length" &&
-          !tagValue.classList.contains(`display${programObj._id}`)
-        )
-          tagValue.style.filter = "blur(0px)";
-      } catch (exce) {}
-    }
-
-    let displayTags = document.getElementsByClassName(
-      `display${programObj._id}`
-    );
-    let valuesForTags = [];
-    for (let val in updatedDataObj) valuesForTags.push(updatedDataObj[val]);
-    let indexForValuesForTags = 1;
-    for (let tagKey in displayTags) {
-      let tagValue = displayTags[tagKey];
-      try {
-        if (tagValue.tagName === "TR") {
-          tagValue.style.position = "revert";
-          continue;
-        }
-        tagValue.style.display = "revert";
-        if (indexForValuesForTags === 2 || indexForValuesForTags === 3)
-          continue;
-        if (tagValue.tagName !== "TD")
-          tagValue.innerText = valuesForTags[indexForValuesForTags++];
-      } catch (exce) {}
-    }
-
-    let editTags = document.getElementsByClassName(`edit${programObj._id}`);
-    for (let tagKey in editTags) {
-      let tagValue = editTags[tagKey];
-      try {
-        if (tagKey !== "length") {
-          tagValue.style.display = "none";
-          tagValue.type = "hidden";
-        }
-      } catch (exce) {}
-    }
-
-    try {
-      let dropdownForDifficulty = document.getElementsByClassName(
-        `editSelect${programObj._id}`
-      )[0];
-      dropdownForDifficulty.style.display = "none";
-
-      let selectionBoxForTopic = document.getElementById(
-        `selectionBoxForTopic${programObj._id}`
-      );
-      selectionBoxForTopic.style.display = "none";
-
-      let textBoxForTopic = document.getElementById(
-        `textBoxForTopic${programObj._id}`
-      );
-      textBoxForTopic.style.display = "none";
-
-      let updateIcon = document.getElementById(`editIcon${programObj._id}`);
-      updateIcon.name = "create-outline";
-
-      let cancelBtnForUpdate = document.getElementById(
-        `cancelBtnForUpdate${programObj._id}`
-      );
-      cancelBtnForUpdate.style.display = "none";
-    } catch (exce) {}
-  };
-
-  const enableAdd = () => {
-    let forms = document.getElementsByClassName("addForm");
-    try {
-      let addBtn = document.getElementById("addBtn");
-      addBtn.style.display = "none";
-      for (let form in forms) {
-        let formElement = forms[form];
-        formElement.style.display = "revert";
-      }
-    } catch (exce) {}
-  };
-
-  const disableAdd = () => {
-    let forms = document.getElementsByClassName("addForm");
-    try {
-      let addBtn = document.getElementById("addBtn");
-      addBtn.style.display = "revert";
-      for (let form in forms) {
-        let formElement = forms[form];
-        formElement.style.display = "none";
-      }
-    } catch (exce) {}
-  };
-
-  const addData = (newProgram) => {
-    if (
-      newProgram.program_name === undefined ||
-      newProgram.program_topic === undefined ||
-      newProgram.program_topic === "Select Topic Name" ||
-      newProgram.program_topic === "" ||
-      newProgram.program_link === undefined ||
-      newProgram.solution_link === undefined ||
-      newProgram.difficulty === undefined ||
-      newProgram.difficulty === "Select Difficulty"
-    ) {
-      Swal.fire({
-        title: "Error!",
-        text: "All fields are not fullfilled",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
-      return;
-    }
-    if (isTopicPresent) {
-      fetch("https://programlist-backend.onrender.com/topic", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          topic_name: newProgram.program_topic,
-        }),
-      }).then((res) => {
-        setNewProgram({});
-      });
-    }
-    fetch("https://programlist-backend.onrender.com/programs", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(newProgram),
-    })
-      .then((r) => r.json())
-      .then((res) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Data Inserted Successfully!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((e) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: "Some Error Occured!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      });
-
-    setNewProgram({
-      ...newProgram,
-      program_name: "",
-      program_topic: "",
-      program_link: "",
-      solution_link: "",
-      difficulty: "",
-    });
-  };
-
-  const updateData = (updatedDataObj) => {
-    fetch(`https://programlist-backend.onrender.com/programs/${updatedDataObj._id}`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(updatedDataObj),
-    })
-      .then((r) => r.json())
-      .then((res) => {
-        setUpdateObj({});
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Data Updated Successfully!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((e) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: "Some Error Occured!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      });
-  };
-
   const allPrograms = filterArr.map((program) => {
     return (
       <>
-        <tr className={`display${program._id}`}>
+        <tr>
           <td>
             <input
               type="checkbox"
               onChange={(e) => {
                 if (e.target.checked === true) {
                   if (isAnyChecked === false) {
-                    toast.success(
-                      `Delete Button Activated! Now you can delete`,
-                      {
-                        position: toast.POSITION.TOP_CENTER,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        autoClose: 5000,
-                        theme: "light",
-                      }
-                    );
                     toast.info(<DeleteButtonToast />, {
+                      className: "deleteAlert",
+                      containerId: "deleteAlert",
                       position: toast.POSITION.TOP_CENTER,
                       hideProgressBar: false,
-                      closeOnClick: true,
+                      closeOnClick: false,
                       pauseOnHover: true,
                       draggable: true,
                       autoClose: false,
@@ -407,6 +142,8 @@ const SelectAll = () => {
                 if (isAnyChecked === true && deleteArr.length === 0) {
                   toast.dismiss();
                   toast.error(`Delete Button Deactivated! You can't delete`, {
+                    className: "deleteAlert",
+                    containerId: "deleteAlert",
                     position: toast.POSITION.TOP_CENTER,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -420,177 +157,41 @@ const SelectAll = () => {
               }}
             />
           </td>
-          <td className={`display${program._id}`}>
+          <td>
             <Link
               to={"./SelectByID/" + program._id}
               style={{ textDecoration: "none" }}
             >
-              <p className={`display${program._id}`}>{program.program_name}</p>
+              <p>{program.program_name}</p>
             </Link>
-            <label style={{ display: "none" }} className={`edit${program._id}`}>
-              <h5>Program Name</h5>
-            </label>
-            <input
-              type="hidden"
-              className={`edit${program._id} form-control border-3`}
-              value={updateObj.program_name}
-              onChange={(e) => {
-                setUpdateObj({ ...updateObj, program_name: e.target.value });
-              }}
-            />
           </td>
-          <td className={`display${program._id}`}>
-            <p className={`display${program._id}`}>{program.program_topic}</p>
-            <label style={{ display: "none" }} className={`edit${program._id}`}>
-              <h5>Program Topic</h5>
-            </label>
-            <select
-              className={`form-control edit${program._id}`}
-              style={{ display: "none" }}
-              id={`selectionBoxForTopic${program._id}`}
-              value={updateObj.program_topic}
-              onChange={(e) => {
-                setUpdateObj({ ...updateObj, program_topic: e.target.value });
-              }}
-            >
-              <option>Select Topic Name</option>
-              {allTopicsName}
-            </select>
-            <input
-              required
-              type="text"
-              class={`form-control`}
-              id={`textBoxForTopic${program._id}`}
-              style={{ display: "none" }}
-              placeholder="Program Topic"
-              value={updateObj.program_topic}
-              onChange={(e) => {
-                setUpdateObj({ ...updateObj, program_topic: e.target.value });
-              }}
-            />
-            <input
-              type="button"
-              style={{ display: "none", width: "500px" }}
-              className={`btn btn-outline-primary my-3 edit${program._id}`}
-              value={listOrTextAreaBtn}
-              onClick={(e) => {
-                try {
-                  if (
-                    document.getElementById(
-                      `selectionBoxForTopic${program._id}`
-                    ).style.display === "none"
-                  ) {
-                    document.getElementById(
-                      `selectionBoxForTopic${program._id}`
-                    ).style.display = "block";
-                    document.getElementById(
-                      `textBoxForTopic${program._id}`
-                    ).style.display = "none";
-                    setListOrTextAreaBtn(
-                      "Not Present in list ? Want to add new topic !"
-                    );
-                  } else {
-                    document.getElementById(
-                      `selectionBoxForTopic${program._id}`
-                    ).style.display = "none";
-                    document.getElementById(
-                      `textBoxForTopic${program._id}`
-                    ).style.display = "block";
-                    setListOrTextAreaBtn("Want to select from list ? ");
-                  }
-                } catch (exce) {}
-              }}
-            ></input>
+          <td>
+            <p>{program.program_topic}</p>
           </td>
-          <td className={`display${program._id}`}>
-            <Link
-              to={program.program_link}
-              className={`display${program._id}`}
-              target="_blank"
-            >
+          <td>
+            <Link to={program.program_link} target="_blank">
               <ion-icon name="link-outline"></ion-icon>
             </Link>
-            <label style={{ display: "none" }} className={`edit${program._id}`}>
-              <h5>Problem Link</h5>
-            </label>
-            <input
-              type="hidden"
-              className={`edit${program._id} form-control border-3`}
-              value={updateObj.program_link}
-              onChange={(e) => {
-                setUpdateObj({ ...updateObj, program_link: e.target.value });
-              }}
-            />
           </td>
-          <td className={`display${program._id}`}>
-            <Link
-              to={program.solution_link}
-              className={`display${program._id}`}
-              target="_blank"
-            >
+          <td>
+            <Link to={program.solution_link} target="_blank">
               <ion-icon name="link-outline"></ion-icon>
             </Link>
-            <label style={{ display: "none" }} className={`edit${program._id}`}>
-              <h5>Solution Link</h5>
-            </label>
-            <input
-              type="hidden"
-              className={`edit${program._id} form-control border-3`}
-              value={updateObj.solution_link}
-              onChange={(e) => {
-                setUpdateObj({ ...updateObj, solution_link: e.target.value });
-              }}
-            />
           </td>
-          <td className={`display${program._id}`}>
-            <p className={`display${program._id}`}>{program.difficulty}</p>
-            <label style={{ display: "none" }} className={`edit${program._id}`}>
-              <h5>Difficulty</h5>
-            </label>
-            <select
-              class={`form-control editSelect${program._id} border-3`}
-              value={updateObj.difficulty}
-              style={{ display: "none" }}
-              onChange={(e) => {
-                setUpdateObj({ ...updateObj, difficulty: e.target.value });
-              }}
-            >
-              <option>Select Difficulty</option>
-              <option>Easy</option>
-              <option>Medium</option>
-              <option>Hard</option>
-            </select>
+          <td>
+            <p>{program.difficulty}</p>
           </td>
-          <td className={`display${program._id}`}>
-            <button
-              className="btn btn-outline-info"
-              onClick={() => {
-                if (
-                  document.getElementById(`editIcon${program._id}`).name ===
-                  "create-outline"
-                ) {
-                  enableEditing(program);
-                  setUpdateObj(program);
-                } else {
-                  disableEditing(program, updateObj);
-                  updateData(updateObj);
-                }
-              }}
-            >
-              <ion-icon
-                id={`editIcon${program._id}`}
-                name="create-outline"
-              ></ion-icon>
+          <td>
+            <button className="btn btn-outline-info" onClick={() => {}}>
+              <ion-icon id={`editIcon`} name="create-outline"></ion-icon>
             </button>
           </td>
           <td>
             <button
               className="btn btn-outline-danger"
-              id={`cancelBtnForUpdate${program._id}`}
+              id={`cancelBtnForUpdate`}
               style={{ display: "none" }}
-              onClick={() => {
-                disableEditing(program, updateObj);
-              }}
+              onClick={() => {}}
             >
               <ion-icon name="close-outline"></ion-icon>
             </button>
@@ -603,6 +204,7 @@ const SelectAll = () => {
   const DeleteButtonToast = ({ closeToast }) => {
     return (
       <div>
+        <p className="fw-bold">Delete Button Activated! Now you can delete</p>
         <button
           className="btn btn-outline-danger"
           onClick={() => {
@@ -617,9 +219,9 @@ const SelectAll = () => {
             }).then((result) => {
               if (result.isConfirmed) {
                 deleteFromArray();
+                closeToast();
               }
             });
-            closeToast();
           }}
         >
           Delete <ion-icon name="trash-outline"></ion-icon>
@@ -627,10 +229,235 @@ const SelectAll = () => {
       </div>
     );
   };
+  const InsertToast = ({ closeToast }) => {
+    let [newProgram, setNewProgram] = useState({});
+    console.warn(newProgram);
+    return (
+      <>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1 my-5" class="form-label">
+            Program Name
+          </label>
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="Program Name"
+            value={newProgram.program_name}
+            onChange={(e) => {
+              setNewProgram({ ...newProgram, program_name: e.target.value });
+            }}
+          />
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">
+            Program Topic
+          </label>
+          <select
+            required
+            className="form-control"
+            id="selectionBoxForTopic"
+            value={newProgram.program_topic}
+            style={{ display: "" }}
+            onChange={(e) => {
+              setNewProgram({ ...newProgram, program_topic: e.target.value });
+            }}
+          >
+            <option>Select Topic Name</option>
+            {allTopicsName}
+          </select>
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="textBoxForTopic"
+            style={{ display: "none" }}
+            placeholder="Program Topic"
+            value={newProgram.program_topic}
+            onChange={(e) => {
+              setNewProgram({ ...newProgram, program_topic: e.target.value });
+            }}
+          />
+          <input
+            type="button"
+            className="btn btn-outline-primary my-2"
+            value={"Not Present in list ? Want to add new topic !"}
+            onClick={(e) => {
+              if (
+                document.getElementById("selectionBoxForTopic").style
+                  .display === "none"
+              ) {
+                document.getElementById("selectionBoxForTopic").style.display =
+                  "";
+                document.getElementById("textBoxForTopic").style.display =
+                  "none";
+                e.target.value =
+                  "Not Present in list ? Want to add new topic !";
+              } else {
+                document.getElementById("selectionBoxForTopic").style.display =
+                  "none";
+                document.getElementById("textBoxForTopic").style.display = "";
+                // document.getElementById("textBoxForTopic").style.value = "";
+                isTopicPresent = false;
+                e.target.value = "Want to select from list ? ";
+              }
+            }}
+          ></input>
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">
+            Program Link
+          </label>
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="Program Link"
+            value={newProgram.program_link}
+            onChange={(e) => {
+              setNewProgram({ ...newProgram, program_link: e.target.value });
+            }}
+          />
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">
+            Solution Link
+          </label>
+          <input
+            required
+            type="text"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="Solution Link"
+            value={newProgram.solution_link}
+            onChange={(e) => {
+              setNewProgram({
+                ...newProgram,
+                solution_link: e.target.value,
+              });
+            }}
+          />
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">
+            Difficulty
+          </label>
+          <select
+            required
+            class="form-control"
+            value={newProgram.difficulty}
+            onChange={(e) => {
+              setNewProgram({
+                ...newProgram,
+                difficulty: e.target.value,
+              });
+            }}
+          >
+            <option>Select Difficulty</option>
+            <option>Easy</option>
+            <option>Medium</option>
+            <option>Hard</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <button
+            type="submit"
+            className="mx-5 btn btn-outline-success"
+            onClick={(e) => {
+              e.preventDefault();
+              closeToast();
+              // console.warn(newProgram);
+              if (
+                newProgram.program_name === undefined ||
+                newProgram.program_topic === undefined ||
+                newProgram.program_topic === "Select Topic Name" ||
+                newProgram.program_topic === "" ||
+                newProgram.program_link === undefined ||
+                newProgram.solution_link === undefined ||
+                newProgram.difficulty === undefined ||
+                newProgram.difficulty === "Select Difficulty"
+              ) {
+                Swal.fire({
+                  title: "Error!",
+                  text: "All fields are not fullfilled",
+                  icon: "error",
+                  confirmButtonText: "Ok",
+                });
+                return;
+              }
+              if (isTopicPresent) {
+                fetch("https://programlist-backend.onrender.com/topic", {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    topic_name: newProgram.program_topic,
+                  }),
+                }).then((res) => {});
+              }
+              fetch("https://programlist-backend.onrender.com/programs", {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-type": "application/json",
+                },
+                body: JSON.stringify(newProgram),
+              })
+                .then((r) => r.json())
+                .then((res) => {
+                  Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Data Inserted Successfully!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                  fetchAllPrgrams();
+                })
+                .catch((e) => {
+                  Swal.fire({
+                    position: "top-end",
+                    icon: "error",
+                    title: "Some Error Occured!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                });
+            }}
+          >
+            Add
+          </button>
+          <button
+            type="submit"
+            className="btn btn-outline-danger"
+            onClick={(e) => {
+              navigate("../SelectAll");
+              closeToast();
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </>
+    );
+  };
 
   return (
     <div className="selectAll main">
-      <ToastContainer className="custom-toast-container" />
+      <ToastContainer
+        enableMultiContainer
+        containerId={"deleteAlert"}
+        className="custom-toast-container rounded-5"
+      />
+      <ToastContainer
+        enableMultiContainer
+        containerId={"insertUpdate"}
+        className="custom-toast-container w-75"
+      />
       <div className="d-flex justify-content-between flex-wrap">
         <div>
           <h1>Programs</h1>
@@ -713,7 +540,18 @@ const SelectAll = () => {
             className="btn btn-outline-success rounded-3 m-2"
             id="addBtn"
             onClick={() => {
-              enableAdd();
+              // enableAdd();
+              toast.info(<InsertToast />, {
+                className: "insertToast",
+                containerId: "insertUpdate",
+                position: toast.POSITION.TOP_CENTER,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                autoClose: false,
+                theme: "light",
+              });
             }}
           >
             <ion-icon name="add-outline"></ion-icon>
@@ -744,155 +582,7 @@ const SelectAll = () => {
               </tr>
             </tbody>
           ) : (
-            <tbody className="text-center">
-              <tr className="addForm" style={{ display: "none" }}>
-                <td colSpan={2}>
-                  <input
-                    type="text"
-                    className={`add form-control border-3 w-75 mx-5`}
-                    value={newProgram.program_name}
-                    onChange={(e) => {
-                      setNewProgram({
-                        ...newProgram,
-                        program_name: e.target.value,
-                      });
-                    }}
-                  />
-                </td>
-                <td>
-                  <select
-                    className={`form-control add`}
-                    id={`topicDropdownForAdd`}
-                    value={newProgram.program_topic}
-                    onChange={(e) => {
-                      setNewProgram({
-                        ...newProgram,
-                        program_topic: e.target.value,
-                      });
-                    }}
-                  >
-                    <option>Select Topic Name</option>
-                    {allTopicsName}
-                  </select>
-                  <input
-                    required
-                    type="text"
-                    class={`form-control`}
-                    id={`topicTextBoxForAdd`}
-                    style={{ display: "none" }}
-                    placeholder="Program Topic"
-                    value={newProgram.program_topic}
-                    onChange={(e) => {
-                      setNewProgram({
-                        ...newProgram,
-                        program_topic: e.target.value,
-                      });
-                    }}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    className={`add form-control border-3`}
-                    value={newProgram.program_link}
-                    onChange={(e) => {
-                      setNewProgram({
-                        ...newProgram,
-                        program_link: e.target.value,
-                      });
-                    }}
-                  ></input>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    className={`add form-control border-3`}
-                    value={newProgram.solution_link}
-                    onChange={(e) => {
-                      setNewProgram({
-                        ...newProgram,
-                        solution_link: e.target.value,
-                      });
-                    }}
-                  />
-                </td>
-                <td colSpan={2}>
-                  <select
-                    class={`form-control add border-3`}
-                    value={newProgram.difficulty}
-                    onChange={(e) => {
-                      setNewProgram({
-                        ...newProgram,
-                        difficulty: e.target.value,
-                      });
-                    }}
-                  >
-                    <option>Select Difficulty</option>
-                    <option>Easy</option>
-                    <option>Medium</option>
-                    <option>Hard</option>
-                  </select>
-                </td>
-              </tr>
-              <tr className="addForm" style={{ display: "none" }}>
-                <td colSpan={3}>
-                  <input
-                    type="button"
-                    style={{ width: "500px" }}
-                    className={`btn btn-outline-primary my-3 add`}
-                    value={listOrTextAreaBtn}
-                    onClick={(e) => {
-                      try {
-                        if (
-                          document.getElementById(`topicDropdownForAdd`).style
-                            .display === "none"
-                        ) {
-                          document.getElementById(
-                            `topicDropdownForAdd`
-                          ).style.display = "block";
-                          document.getElementById(
-                            `topicTextBoxForAdd`
-                          ).style.display = "none";
-                          setListOrTextAreaBtn(
-                            "Not Present in list ? Want to add new topic !"
-                          );
-                          isTopicPresent = true;
-                        } else {
-                          document.getElementById(
-                            `topicDropdownForAdd`
-                          ).style.display = "none";
-                          document.getElementById(
-                            `topicTextBoxForAdd`
-                          ).style.display = "block";
-                          setListOrTextAreaBtn("Want to select from list ? ");
-                          isTopicPresent = false;
-                        }
-                      } catch (exce) {}
-                    }}
-                  ></input>
-                </td>
-                <td colSpan={2}>
-                  <button
-                    className="btn btn-outline-success mx-3"
-                    onClick={() => {
-                      addData(newProgram);
-                      disableAdd();
-                    }}
-                  >
-                    <ion-icon name="checkmark-outline"></ion-icon>
-                  </button>
-                  <button
-                    className="btn btn-outline-danger mx-5"
-                    onClick={() => {
-                      disableAdd();
-                    }}
-                  >
-                    <ion-icon name="close-outline"></ion-icon>
-                  </button>
-                </td>
-              </tr>
-              {allPrograms}
-            </tbody>
+            <tbody className="text-center">{allPrograms}</tbody>
           )}
         </table>
       </div>
