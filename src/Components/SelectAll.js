@@ -63,7 +63,6 @@ const SelectAll = () => {
           method: "DELETE",
         }
       ).then((res) => {
-        console.log(topic);
       });
     }
     fetch(`https://programlist-backend.onrender.com/programs/${id}`, {
@@ -107,6 +106,7 @@ const SelectAll = () => {
               onChange={(e) => {
                 if (e.target.checked === true) {
                   if (isAnyChecked === false) {
+                    toast.dismiss();
                     toast.info(<DeleteButtonToast />, {
                       className: "deleteAlert",
                       containerId: "deleteAlert",
@@ -186,7 +186,7 @@ const SelectAll = () => {
             <button
               className="btn btn-outline-info"
               onClick={() => {
-                toast.info(<UpdateToast id={program._id} />, {
+                toast.info(<UpdateToast id={program._id} topic={program.program_topic.toString()} />, {
                   className: "insertToast",
                   closeButton: false,
                   containerId: "insertUpdate",
@@ -374,7 +374,6 @@ const SelectAll = () => {
             onClick={(e) => {
               e.preventDefault();
               closeToast();
-              // console.warn(newProgram);
               if (
                 newProgram.program_name === undefined ||
                 newProgram.program_topic === undefined ||
@@ -450,18 +449,261 @@ const SelectAll = () => {
       </>
     );
   };
-  const UpdateToast = ({ closeToast, id }) => {
+  const UpdateToast = ({ closeToast, id , topic }) => {
+    const [newProgram, setNewProgram] = useState({});
+    const [listOrTextAreaBtn, setListOrTextAreaBtn] = useState(
+      "Not Present in list ? Want to add new topic !"
+    );
+    useEffect(() => {
+      fetch("https://programlist-backend.onrender.com/programs/" + id)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          setNewProgram(data);
+        })
+        .catch((e) => {});
+      }, [id]);
+    let lastTopic = topic;
     return (
       <>
-        <div>Data can be update soon.</div>
-        <button
-          className="btn btn-outline-danger"
-          onClick={() => {
-            closeToast();
-          }}
-        >
-          <ion-icon name="close-outline"></ion-icon>
-        </button>
+        {/* <div className="main my-5 mx-5 w-75"> */}
+          <div class="mb-3 mt-5">
+            <label for="exampleFormControlInput1" class="form-label">
+              Program Name
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="exampleFormControlInput1"
+              placeholder="Program Name"
+              value={newProgram.program_name}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_name: e.target.value });
+              }}
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">
+              Program Topic
+            </label>
+            <select
+              required
+              className="form-control"
+              id="selectionBoxForTopic"
+              value={newProgram.program_topic}
+              style={{ display: "" }}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_topic: e.target.value });
+              }}
+            >
+              <option>Select Topic Name</option>
+              {allTopicsName}
+            </select>
+            <input
+              required
+              type="text"
+              class="form-control"
+              id="textBoxForTopic"
+              style={{ display: "none" }}
+              placeholder="Program Topic"
+              value={newProgram.program_topic}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_topic: e.target.value });
+              }}
+            />
+            <input
+              type="button"
+              className="btn btn-outline-primary my-2"
+              value={listOrTextAreaBtn}
+              onClick={(e) => {
+                if (
+                  document.getElementById("selectionBoxForTopic").style
+                    .display === "none"
+                ) {
+                  document.getElementById(
+                    "selectionBoxForTopic"
+                  ).style.display = "";
+                  document.getElementById("textBoxForTopic").style.display =
+                    "none";
+                  setListOrTextAreaBtn(
+                    "Not Present in list ? Want to add new topic !"
+                  );
+                } else {
+                  document.getElementById(
+                    "selectionBoxForTopic"
+                  ).style.display = "none";
+                  document.getElementById("textBoxForTopic").style.display = "";
+                  setListOrTextAreaBtn("Want to select from list ? ");
+                }
+              }}
+            ></input>
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">
+              Program Link
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="exampleFormControlInput1"
+              placeholder="Program Link"
+              value={newProgram.program_link}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_link: e.target.value });
+              }}
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">
+              Solution Link
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="exampleFormControlInput1"
+              placeholder="Solution Link"
+              value={newProgram.solution_link}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, solution_link: e.target.value });
+              }}
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">
+              Difficulty
+            </label>
+            <select
+              class="form-control"
+              value={newProgram.difficulty}
+              onChange={(e) => {
+                setNewProgram({
+                  ...newProgram,
+                  difficulty: e.target.value,
+                });
+              }}
+            >
+              <option>Select Difficulty</option>
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <button
+              type="submit"
+              className="mx-5 btn btn-outline-success"
+              onClick={(e) => {
+                e.preventDefault();
+                closeToast();
+                if (
+                  newProgram.program_name === undefined ||
+                  newProgram.program_topic === undefined ||
+                  newProgram.program_topic === "Select Topic Name" ||
+                  newProgram.program_topic === "" ||
+                  newProgram.program_link === undefined ||
+                  newProgram.solution_link === undefined ||
+                  newProgram.difficulty === undefined ||
+                  newProgram.difficulty === "Select Difficulty"
+                ) {
+                  Swal.fire({
+                    title: "Error!",
+                    text: "All fields are not fullfilled",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                  });
+                  return;
+                }
+                let lastIsEq = lastTopic !== newProgram.program_topic;
+                if (lastIsEq) {
+                  let count = programObj.filter(
+                    (ele) =>
+                      ele.program_topic.toLowerCase() ===
+                      lastTopic.toLowerCase()
+                  ).length;
+                  if (count === 1) {
+                    fetch(
+                      `https://programlist-backend.onrender.com/topic/deleteFromTopic/${lastTopic}`,
+                      {
+                        method: "DELETE",
+                      }
+                    ).then((res) => {});
+                  }
+                }
+                if (
+                  topicObj.filter(
+                    (ele) =>
+                      ele.toLowerCase() ===
+                      newProgram.program_topic.toLowerCase()
+                  ).length === 0
+                ) {
+                  fetch("https://programlist-backend.onrender.com/topic", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      topic_name: newProgram.program_topic,
+                    }),
+                  }).then((res) => {
+                  });
+                }
+                fetch(
+                  `https://programlist-backend.onrender.com/programs/${id}`,
+                  {
+                    method: "PUT",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-type": "application/json",
+                    },
+                    body: JSON.stringify(newProgram),
+                  }
+                )
+                  .then((r) => r.json())
+                  .then((res) => {
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title: "Data Updated Successfully!",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                    fetchAllPrgrams();
+                  })
+                  .catch((e) => {
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "error",
+                      title: "Some Error Occured!",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  });
+
+                setNewProgram({
+                  ...newProgram,
+                  program_name: "",
+                  program_topic: "",
+                  program_link: "",
+                  solution_link: "",
+                  difficulty: "",
+                });
+
+              }}
+            >
+              Update
+            </button>
+            <button
+              type="submit"
+              className="btn btn-outline-danger"
+              onClick={(e) => {
+                closeToast();
+              }}
+            >
+              Cancel
+            </button>
+          </div>
       </>
     );
   };
@@ -470,7 +712,7 @@ const SelectAll = () => {
       <ToastContainer
         enableMultiContainer
         containerId={"deleteAlert"}
-        className="custom-toast-container rounded-5"
+        className="custom-toast-container rounded-5 deleteAlert"
       />
       <ToastContainer
         enableMultiContainer
