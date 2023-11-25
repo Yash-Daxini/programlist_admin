@@ -1,8 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link , useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import "../CSS/style.css";
 
 const Sidebar = () => {
+  const location = useLocation();
+
   const toggleMenu = () => {
     let toggle = document.querySelector(".toggle");
     let toggleInSideBar = document.querySelector(".toggleInSideBar");
@@ -13,6 +16,11 @@ const Sidebar = () => {
     navigation.classList.toggle("active");
     main.classList.toggle("active");
   };
+
+  useEffect(() => {
+    let toggle = document.querySelector(".toggle");
+    if( toggle.classList.contains("active") ) toggleMenu();
+  }, [location]);
 
   return (
     <>

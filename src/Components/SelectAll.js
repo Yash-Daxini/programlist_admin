@@ -189,6 +189,7 @@ const SelectAll = () => {
                 toast.info(<UpdateToast id={program._id} topic={program.program_topic.toString()} />, {
                   className: "insertToast",
                   closeButton: false,
+                  icon:false,
                   containerId: "insertUpdate",
                   position: toast.POSITION.TOP_CENTER,
                   hideProgressBar: false,
@@ -240,7 +241,8 @@ const SelectAll = () => {
     let [newProgram, setNewProgram] = useState({});
     return (
       <>
-        <div class="mb-3">
+        <h3>Add Programs</h3>
+        <div class="mb-3 mt-5">
           <label for="exampleFormControlInput1 my-5" class="form-label">
             Program Name
           </label>
@@ -467,7 +469,7 @@ const SelectAll = () => {
     let lastTopic = topic;
     return (
       <>
-        {/* <div className="main my-5 mx-5 w-75"> */}
+          <h3>Update Programs</h3>
           <div class="mb-3 mt-5">
             <label for="exampleFormControlInput1" class="form-label">
               Program Name
@@ -804,6 +806,7 @@ const SelectAll = () => {
               toast.info(<InsertToast />, {
                 className: "insertToast",
                 closeButton: false,
+                icon:false,
                 containerId: "insertUpdate",
                 position: toast.POSITION.TOP_CENTER,
                 hideProgressBar: false,
