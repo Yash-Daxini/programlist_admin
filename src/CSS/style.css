@@ -818,8 +818,15 @@ table {
     }
     .main .topbar .name {
         font-size: 20px;
-        /* width: 2px; */
-        /* padding: 0px 0px; */
+    }
+    .selectAll{
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 5px;
+    }
+    .selectAll table{
+        font-size: 7px;
+        letter-spacing: .3px;
     }
 }
 /* Toast Styles  */
