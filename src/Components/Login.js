@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [login, setLogin] = useState({});
   const [users, setUsers] = useState([]);
+  const loadingToast = useRef(null);
 
   const navigate = useNavigate();
 
@@ -15,17 +16,37 @@ const Login = () => {
   }, [navigate]);
 
   useEffect(() => {
+    toast.dismiss();
+    loadingToast.current = toast.loading("Connecting to the servers...");
     fetch("https://programlist-backend.onrender.com/user")
       .then((res) => {
         return res.json();
       })
       .then((data) => {
+        toast.update(loadingToast.current, {
+          render: "Connected to the server! Now you can login",
+          type: "success",
+          isLoading: false,
+          position: "top-right",
+          closeOnClick: true,
+          closeButton: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         setUsers(data);
+      })
+      .catch(() => {
+        toast.update(loadingToast.current, {
+          render: "Something went wrong",
+          type: "error",
+          isLoading: false,
+        });
       });
   }, []);
 
   return (
     <div className="backgroundColorBlue login">
+      <ToastContainer className="custom-toast-container rounded-5" />
       <div className="container">
         <div className="text-center">
           <h2 className="py-3">Program List</h2>
@@ -96,8 +117,6 @@ const Login = () => {
           </form>
           <form class="form-group mb-3">
             <div class="form-actions text-center">
-              {/* <h5>Don't Have Account ?</h5>
-              <button class="signup my-3 rounded-3">Sign Up</button> */}
             </div>
           </form>
         </div>
