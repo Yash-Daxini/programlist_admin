@@ -24,77 +24,77 @@ const Sidebar = () => {
 
   return (
     <>
-      <div class="navigation" id="navigation">
-      <div class="toggleInSideBar" onClick={toggleMenu}></div>
+      <div className="navigation" id="navigation">
+      <div className="toggleInSideBar" onClick={toggleMenu}></div>
         <ul>
           <li>
-            <Link class="" to="./">
-              <span class="icon"></span>
-              <span class="title">
+            <Link className="" to="./">
+              <span className="icon"></span>
+              <span className="title">
                 <h3>ProgramList</h3>
               </span>
             </Link>
           </li>
           <li>
-            <Link class="" to="./">
-              <span class="icon">
-                <ion-icon class="ion" name="home-outline"></ion-icon>
+            <Link className="" to="./">
+              <span className="icon">
+                <ion-icon className="ion" name="home-outline"></ion-icon>
               </span>
-              <span class="title">Dashbord</span>
+              <span className="title">Dashbord</span>
             </Link>
           </li>
           <li>
-            <Link class="" to="./SelectAll">
-              <span class="icon">
-                <ion-icon class="ion" name="code-outline"></ion-icon>
+            <Link className="" to="./SelectAll">
+              <span className="icon">
+                <ion-icon className="ion" name="code-outline"></ion-icon>
               </span>
-              <span class="title">Programs</span>
+              <span className="title">Programs</span>
             </Link>
           </li>
           <li>
-            <Link class="" to="./SelectAllTopic">
-              <span class="icon">
-                <ion-icon class="ion" name="podium-outline"></ion-icon>
+            <Link className="" to="./SelectAllTopic">
+              <span className="icon">
+                <ion-icon className="ion" name="podium-outline"></ion-icon>
               </span>
-              <span class="title">Topics</span>
+              <span className="title">Topics</span>
             </Link>
           </li>
           <li>
-            <Link class="" to="./SelectAllUser">
-              <span class="icon">
-                <ion-icon class="ion" name="people-outline"></ion-icon>
+            <Link className="" to="./SelectAllUser">
+              <span className="icon">
+                <ion-icon className="ion" name="people-outline"></ion-icon>
               </span>
-              <span class="title">Users</span>
+              <span className="title">Users</span>
             </Link>
           </li>
           {/* <li>
-                    <Link class="" to={"./Insert"}>
-                        <span class="icon"><ion-icon class="ion" name="add-circle-outline"></ion-icon></span>
-                        <span class="title">Insert Program</span>
+                    <Link className="" to={"./Insert"}>
+                        <span className="icon"><ion-icon className="ion" name="add-circle-outline"></ion-icon></span>
+                        <span className="title">Insert Program</span>
                     </Link>
                 </li> */}
           {/* <li>
-                    <Link class="" to={"./InsertUser"}>
-                        <span class="icon"><ion-icon class="ion" name="add-circle-outline"></ion-icon></span>
-                        <span class="title">Insert User</span>
+                    <Link className="" to={"./InsertUser"}>
+                        <span className="icon"><ion-icon className="ion" name="add-circle-outline"></ion-icon></span>
+                        <span className="title">Insert User</span>
                     </Link>
                 </li> */}
           {/* <li>
-                    <a class="" asp-area="LOC_City" asp-controller="Home" asp-action="Index">
-                        <span class="icon"><ion-icon class="ion" name="location-outline"></ion-icon></span>
-                        <span class="title">City</span>
+                    <a className="" asp-area="LOC_City" asp-controller="Home" asp-action="Index">
+                        <span className="icon"><ion-icon className="ion" name="location-outline"></ion-icon></span>
+                        <span className="title">City</span>
                     </a>
                 </li>
                 <li>
-                    <a class="" asp-area="CON_ContactCategory" asp-controller="Home" asp-action="Index">
-                        <span class="icon"><ion-icon class="ion" name="copy-outline"></ion-icon></span>
-                        <span class="title">Category</span>
+                    <a className="" asp-area="CON_ContactCategory" asp-controller="Home" asp-action="Index">
+                        <span className="icon"><ion-icon className="ion" name="copy-outline"></ion-icon></span>
+                        <span className="title">Category</span>
                     </a>
                 </li>
                 <li>
-                    <a class="" asp-area="MST_Contact" asp-controller="Home" asp-action="Index">
-                        <span class="icon"><ion-icon class="ion" name="person-outline"></ion-icon></span>
-                        <span class="title">Contact</span>
+                    <a className="" asp-area="MST_Contact" asp-controller="Home" asp-action="Index">
+                        <span className="icon"><ion-icon className="ion" name="person-outline"></ion-icon></span>
+                        <span className="title">Contact</span>
                     </a>
                 </li> */}
         </ul>

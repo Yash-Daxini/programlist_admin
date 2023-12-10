@@ -54,14 +54,14 @@ const Login = () => {
         <div className="content container backgroundColorBlueLite">
           <ToastContainer className="custom-toast-container" />
           <form className="form-group" method="post">
-            <h3 class="form-title text-center font-green my-4">Sign In</h3>
-            <div class="form-group">
-              <label for="exampleFormControlInput1" class="form-label">
+            <h3 className="form-title text-center font-green my-4">Sign In</h3>
+            <div className="form-group">
+              <label for="exampleFormControlInput1" className="form-label">
                 User Name
               </label>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 placeholder="User Name"
                 value={login.name}
                 onChange={(e) => {
@@ -69,13 +69,13 @@ const Login = () => {
                 }}
               />
             </div>
-            <div class="form-group">
-              <label for="exampleFormControlInput1" class="form-label">
+            <div className="form-group">
+              <label for="exampleFormControlInput1" className="form-label">
                 Password
               </label>
               <input
                 type="password"
-                class="form-control form-control-solid placeholder-no-fix"
+                className="form-control form-control-solid placeholder-no-fix"
                 placeholder="Password"
                 value={login.pass}
                 onChange={(e) => {
@@ -115,8 +115,8 @@ const Login = () => {
               </button>
             </div>
           </form>
-          <form class="form-group mb-3">
-            <div class="form-actions text-center">
+          <form className="form-group mb-3">
+            <div className="form-actions text-center">
             </div>
           </form>
         </div>

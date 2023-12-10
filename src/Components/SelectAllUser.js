@@ -113,7 +113,7 @@ const SelectAllUser = () => {
         </div>
       </div>
       <div className="table-responsive">
-        <table class="table table-borderless">
+        <table className="table table-borderless">
           <thead>
             <tr>
               <th scope="col">Name</th>

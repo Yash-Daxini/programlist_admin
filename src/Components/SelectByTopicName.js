@@ -60,7 +60,7 @@ const SelectByTopicName = () => {
     <div className="selectAll main">
       <h1 style={{textTransform:"capitalize"}}>{params.name}</h1>
       <div>
-        <table class="table">
+        <table className="table">
           <thead>
             <tr>
               <th scope="col">Name</th>

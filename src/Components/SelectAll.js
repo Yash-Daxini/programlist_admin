@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import Modal from "react-modal";
 
 const SelectAll = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const SelectAll = () => {
   });
   const [deleteArr, setDeleteArr] = useState([]);
   const [filterArr, setFilterArr] = useState([]);
+  const [isInsert, setIsInsert] = useState(false);
+  const [isUpdate, setIsUpdate] = useState({ isUpdate: false });
   let isTopicPresent = true;
   useEffect(() => {
     if (sessionStorage.getItem("user") === null) {
@@ -158,13 +161,13 @@ const SelectAll = () => {
             />
           </td>
           <td>
-            <p>{program.program_name}</p>
-            {/* <Link
+            {/* <p>{program.program_name}</p> */}
+            <Link
               to={"./SelectByID/" + program._id}
               style={{ textDecoration: "none" }}
             >
               <p>{program.program_name}</p>
-            </Link> */}
+            </Link>
           </td>
           <td>
             <p>{program.program_topic}</p>
@@ -186,25 +189,11 @@ const SelectAll = () => {
             <button
               className="btn btn-outline-info"
               onClick={() => {
-                toast.info(
-                  <UpdateToast
-                    id={program._id}
-                    topic={program.program_topic.toString()}
-                  />,
-                  {
-                    className: "insertToast",
-                    closeButton: false,
-                    icon: false,
-                    containerId: "insertUpdate",
-                    position: toast.POSITION.TOP_CENTER,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    autoClose: false,
-                    theme: "light",
-                  }
-                );
+                setIsUpdate({
+                  isUpdate: true,
+                  id: program._id,
+                  topic: program.program_topic,
+                });
               }}
             >
               <ion-icon id={`editIcon`} name="create-outline"></ion-icon>
@@ -243,56 +232,62 @@ const SelectAll = () => {
       </div>
     );
   };
-  const InsertToast = ({ closeToast }) => {
-    let [newProgram, setNewProgram] = useState({});
+  const InsertToast = () => {
+    let [newProgram, setNewProgram] = useState({ program_testcases: {} });
     return (
       <>
         <h3>Add Programs</h3>
-        <div class="mb-3 mt-5">
-          <label for="exampleFormControlInput1 my-5" class="form-label">
-            Program Name
-          </label>
+        <div className="form-floating mb-3 mt-4">
           <input
             required
             type="text"
-            class="form-control"
-            id="exampleFormControlInput1"
+            className="form-control"
+            id="floatingInput"
             placeholder="Program Name"
             value={newProgram.program_name}
             onChange={(e) => {
               setNewProgram({ ...newProgram, program_name: e.target.value });
             }}
           />
+          <label for="floatingInput">Program Name</label>
         </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Program Topic
-          </label>
-          <select
-            required
-            className="form-control"
-            id="selectionBoxForTopic"
-            value={newProgram.program_topic}
-            style={{ display: "" }}
-            onChange={(e) => {
-              setNewProgram({ ...newProgram, program_topic: e.target.value });
-            }}
-          >
-            <option>Select Topic Name</option>
-            {allTopicsName}
-          </select>
-          <input
-            required
-            type="text"
-            class="form-control"
-            id="textBoxForTopic"
-            style={{ display: "none" }}
-            placeholder="Program Topic"
-            value={newProgram.program_topic}
-            onChange={(e) => {
-              setNewProgram({ ...newProgram, program_topic: e.target.value });
-            }}
-          />
+        <div>
+          <div className="form-floating mb-3">
+            <select
+              required
+              className="form-control"
+              id="selectionBoxForTopic"
+              value={newProgram.program_topic}
+              style={{ display: "" }}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_topic: e.target.value });
+              }}
+            >
+              <option>Select Topic Name</option>
+              {allTopicsName}
+            </select>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              required
+              type="text"
+              className="form-control textBoxForTopic"
+              id="floatingInput"
+              style={{ display: "none" }}
+              placeholder="Program Topic"
+              value={newProgram.program_topic}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_topic: e.target.value });
+              }}
+            />
+            <label
+              for="floatingInput"
+              className="textBoxForTopicLabel"
+              style={{ display: "none" }}
+            >
+              Program Topic
+            </label>
+          </div>
           <input
             type="button"
             className="btn btn-outline-primary my-2"
@@ -304,46 +299,51 @@ const SelectAll = () => {
               ) {
                 document.getElementById("selectionBoxForTopic").style.display =
                   "";
-                document.getElementById("textBoxForTopic").style.display =
-                  "none";
+                document.getElementsByClassName(
+                  "textBoxForTopic"
+                )[0].style.display = "none";
+                document.getElementsByClassName(
+                  "textBoxForTopicLabel"
+                )[0].style.display = "none";
                 e.target.value =
                   "Not Present in list ? Want to add new topic !";
               } else {
                 document.getElementById("selectionBoxForTopic").style.display =
                   "none";
-                document.getElementById("textBoxForTopic").style.display = "";
-                // document.getElementById("textBoxForTopic").style.value = "";
+                document.getElementsByClassName(
+                  "textBoxForTopic"
+                )[0].style.display = "";
+                document.getElementsByClassName(
+                  "textBoxForTopicLabel"
+                )[0].style.display = "";
                 isTopicPresent = false;
                 e.target.value = "Want to select from list ? ";
               }
             }}
           ></input>
         </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Program Link
-          </label>
+        <div className="form-floating mb-3">
           <input
             required
             type="text"
-            class="form-control"
-            id="exampleFormControlInput1"
+            className="form-control"
+            id="floatingInput"
             placeholder="Program Link"
             value={newProgram.program_link}
             onChange={(e) => {
               setNewProgram({ ...newProgram, program_link: e.target.value });
             }}
           />
-        </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Solution Link
+          <label for="floatingInput" className="form-label">
+            Program Link
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             required
             type="text"
-            class="form-control"
-            id="exampleFormControlInput1"
+            className="form-control"
+            id="floatingInput"
             placeholder="Solution Link"
             value={newProgram.solution_link}
             onChange={(e) => {
@@ -353,14 +353,33 @@ const SelectAll = () => {
               });
             }}
           />
-        </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Difficulty
+          <label for="floatingInput" className="form-label">
+            Solution Link
           </label>
+        </div>
+        <div className="form-floating mb-3">
+          <textarea
+            required
+            rows={"4"}
+            className="form-control h-100"
+            id="floatingInput"
+            placeholder="Description"
+            value={newProgram.program_description}
+            onChange={(e) => {
+              setNewProgram({
+                ...newProgram,
+                program_description: e.target.value,
+              });
+            }}
+          />
+          <label for="floatingInput" className="form-label">
+            Description
+          </label>
+        </div>
+        <div className="form-floating mb-3">
           <select
             required
-            class="form-control"
+            className="form-control"
             value={newProgram.difficulty}
             onChange={(e) => {
               setNewProgram({
@@ -375,13 +394,65 @@ const SelectAll = () => {
             <option>Hard</option>
           </select>
         </div>
-        <div class="mb-3">
+        <div>
+          <label className="fw-semibold mb-3">Add Test Cases:</label>
+          <div className="row">
+            <div className="col">
+              <div className="form-floating mb-3 ">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="floatingInput"
+                  placeholder="Testcase key"
+                  value={newProgram.program_testcases.input}
+                  onChange={(e) => {
+                    setNewProgram({
+                      ...newProgram,
+                      program_testcases: {
+                        ...newProgram.program_testcases,
+                        input: e.target.value,
+                      },
+                    });
+                  }}
+                />
+                <label for="floatingInput" className="form-label">
+                  Testcase Input
+                </label>
+              </div>
+            </div>
+            <div className="col">
+              <div className="form-floating mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="floatingInput"
+                  placeholder="Testcase Value"
+                  value={newProgram.program_testcases.output}
+                  onChange={(e) => {
+                    setNewProgram({
+                      ...newProgram,
+                      program_testcases: {
+                        ...newProgram.program_testcases,
+                        output: e.target.value,
+                      },
+                    });
+                  }}
+                />
+                <label for="floatingInput" className="form-label">
+                  Testcase Output
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mb-3">
           <button
             type="submit"
             className="mx-5 btn btn-outline-success"
             onClick={(e) => {
               e.preventDefault();
-              closeToast();
+              setIsInsert(false);
+              setIsUpdate({ isUpdate: false });
               if (
                 newProgram.program_name === undefined ||
                 newProgram.program_topic === undefined ||
@@ -390,6 +461,9 @@ const SelectAll = () => {
                 newProgram.program_link === undefined ||
                 newProgram.solution_link === undefined ||
                 newProgram.difficulty === undefined ||
+                newProgram.program_description === undefined ||
+                newProgram.program_testcases.input === undefined ||
+                newProgram.program_testcases.output === undefined ||
                 newProgram.difficulty === "Select Difficulty"
               ) {
                 Swal.fire({
@@ -400,6 +474,7 @@ const SelectAll = () => {
                 });
                 return;
               }
+
               if (isTopicPresent) {
                 fetch("https://programlist-backend.onrender.com/topic", {
                   method: "POST",
@@ -412,6 +487,7 @@ const SelectAll = () => {
                   }),
                 }).then((res) => {});
               }
+
               fetch("https://programlist-backend.onrender.com/programs", {
                 method: "POST",
                 headers: {
@@ -448,7 +524,7 @@ const SelectAll = () => {
             type="submit"
             className="btn btn-outline-danger"
             onClick={(e) => {
-              closeToast();
+              setIsInsert(false);
             }}
           >
             Cancel
@@ -457,69 +533,80 @@ const SelectAll = () => {
       </>
     );
   };
-  const UpdateToast = ({ closeToast, id, topic }) => {
-    const [newProgram, setNewProgram] = useState({});
+  const UpdateToast = () => {
+    const [newProgram, setNewProgram] = useState({ program_testcases: {} });
     const [listOrTextAreaBtn, setListOrTextAreaBtn] = useState(
       "Not Present in list ? Want to add new topic !"
     );
+    let id = isUpdate.id;
+    let topic = isUpdate.topic;
     useEffect(() => {
-      fetch("https://programlist-backend.onrender.com/programs/" + id)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          setNewProgram(data);
-        })
-        .catch((e) => {});
+      if (isUpdate.isUpdate) {
+        fetch("https://programlist-backend.onrender.com/programs/" + id)
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            setNewProgram(data);
+          })
+          .catch((e) => {});
+      }
     }, [id]);
+
     let lastTopic = topic;
     return (
       <>
         <h3>Update Programs</h3>
-        <div class="mb-3 mt-5">
-          <label for="exampleFormControlInput1" class="form-label">
-            Program Name
-          </label>
+        <div className="form-floating mb-3 mt-4">
           <input
             type="text"
-            class="form-control"
-            id="exampleFormControlInput1"
+            className="form-control"
+            id="floatingInput"
             placeholder="Program Name"
             value={newProgram.program_name}
             onChange={(e) => {
               setNewProgram({ ...newProgram, program_name: e.target.value });
             }}
           />
+          <label for="floatingInput">Program Name</label>
         </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Program Topic
-          </label>
-          <select
-            required
-            className="form-control"
-            id="selectionBoxForTopic"
-            value={newProgram.program_topic}
-            style={{ display: "" }}
-            onChange={(e) => {
-              setNewProgram({ ...newProgram, program_topic: e.target.value });
-            }}
-          >
-            <option>Select Topic Name</option>
-            {allTopicsName}
-          </select>
-          <input
-            required
-            type="text"
-            class="form-control"
-            id="textBoxForTopic"
-            style={{ display: "none" }}
-            placeholder="Program Topic"
-            value={newProgram.program_topic}
-            onChange={(e) => {
-              setNewProgram({ ...newProgram, program_topic: e.target.value });
-            }}
-          />
+        <div>
+          <div className="form-floating mb-3">
+            <select
+              required
+              className="form-control"
+              id="selectionBoxForTopic"
+              value={newProgram.program_topic}
+              style={{ display: "" }}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_topic: e.target.value });
+              }}
+            >
+              <option>Select Topic Name</option>
+              {allTopicsName}
+            </select>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              required
+              type="text"
+              className="form-control textBoxForTopic"
+              id="floatingInput"
+              style={{ display: "none" }}
+              placeholder="Program Topic"
+              value={newProgram.program_topic}
+              onChange={(e) => {
+                setNewProgram({ ...newProgram, program_topic: e.target.value });
+              }}
+            />
+            <label
+              for="floatingInput"
+              className="form-label textBoxForTopicLabel"
+              style={{ display: "none" }}
+            >
+              Program Topic
+            </label>
+          </div>
           <input
             type="button"
             className="btn btn-outline-primary my-2"
@@ -531,56 +618,77 @@ const SelectAll = () => {
               ) {
                 document.getElementById("selectionBoxForTopic").style.display =
                   "";
-                document.getElementById("textBoxForTopic").style.display =
-                  "none";
+                document.getElementsByClassName(
+                  "textBoxForTopic"
+                )[0].style.display = "none";
+                document.getElementsByClassName(
+                  "textBoxForTopicLabel"
+                )[0].style.display = "none";
                 setListOrTextAreaBtn(
                   "Not Present in list ? Want to add new topic !"
                 );
               } else {
                 document.getElementById("selectionBoxForTopic").style.display =
                   "none";
-                document.getElementById("textBoxForTopic").style.display = "";
+                document.getElementsByClassName(
+                  "textBoxForTopic"
+                )[0].style.display = "";
+                document.getElementsByClassName(
+                  "textBoxForTopicLabel"
+                )[0].style.display = "";
                 setListOrTextAreaBtn("Want to select from list ? ");
               }
             }}
           ></input>
         </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Program Link
-          </label>
+        <div className="form-floating mb-3">
           <input
             type="text"
-            class="form-control"
-            id="exampleFormControlInput1"
+            className="form-control"
+            id="floatingInput"
             placeholder="Program Link"
             value={newProgram.program_link}
             onChange={(e) => {
               setNewProgram({ ...newProgram, program_link: e.target.value });
             }}
           />
+          <label for="floatingInput">Program Link</label>
         </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Solution Link
-          </label>
+        <div className="form-floating mb-3">
           <input
             type="text"
-            class="form-control"
-            id="exampleFormControlInput1"
+            className="form-control"
+            id="floatingInput"
             placeholder="Solution Link"
             value={newProgram.solution_link}
             onChange={(e) => {
               setNewProgram({ ...newProgram, solution_link: e.target.value });
             }}
           />
+          <label for="floatingInput">Solution Link</label>
         </div>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">
-            Difficulty
+        <div className="form-floating mb-3">
+          <textarea
+            required
+            rows={"4"}
+            className="form-control h-100"
+            id="floatingInput"
+            placeholder="Description"
+            value={newProgram.program_description}
+            onChange={(e) => {
+              setNewProgram({
+                ...newProgram,
+                program_description: e.target.value,
+              });
+            }}
+          />
+          <label for="floatingInput" className="form-label">
+            Description
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <select
-            class="form-control"
+            className="form-control"
             value={newProgram.difficulty}
             onChange={(e) => {
               setNewProgram({
@@ -595,13 +703,76 @@ const SelectAll = () => {
             <option>Hard</option>
           </select>
         </div>
-        <div class="mb-3">
+        <div>
+          <label className="fw-semibold mb-3">Add Test Cases:</label>
+          <div className="row">
+            <div className="col">
+              <div className="form-floating mb-3 ">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="floatingInput"
+                  placeholder="Testcase key"
+                  value={
+                    newProgram.program_testcases === undefined ||
+                    newProgram.program_testcases === null
+                      ? ""
+                      : newProgram.program_testcases.input
+                  }
+                  onChange={(e) => {
+                    setNewProgram({
+                      ...newProgram,
+                      program_testcases: {
+                        ...newProgram.program_testcases,
+                        input: e.target.value,
+                      },
+                    });
+                  }}
+                />
+                <label for="floatingInput" className="form-label">
+                  Testcase Input
+                </label>
+              </div>
+            </div>
+            <div className="col">
+              <div className="form-floating mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="floatingInput"
+                  placeholder="Testcase Value"
+                  value={
+                    newProgram.program_testcases === undefined ||
+                    newProgram.program_testcases === null
+                      ? ""
+                      : newProgram.program_testcases.output
+                  }
+                  onChange={(e) => {
+                    setNewProgram({
+                      ...newProgram,
+                      program_testcases: {
+                        ...newProgram.program_testcases,
+                        output: e.target.value,
+                      },
+                    });
+                  }}
+                />
+                <label for="floatingInput" className="form-label">
+                  Testcase Output
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mb-3">
           <button
             type="submit"
             className="mx-5 btn btn-outline-success"
             onClick={(e) => {
               e.preventDefault();
-              closeToast();
+              setIsUpdate({
+                isUpdate: false,
+              });
               if (
                 newProgram.program_name === undefined ||
                 newProgram.program_topic === undefined ||
@@ -609,7 +780,8 @@ const SelectAll = () => {
                 newProgram.program_topic === "" ||
                 newProgram.program_link === undefined ||
                 newProgram.solution_link === undefined ||
-                newProgram.difficulty === undefined ||
+                newProgram.program_testcases.input === undefined ||
+                newProgram.program_testcases.output === undefined ||
                 newProgram.difficulty === "Select Difficulty"
               ) {
                 Swal.fire({
@@ -652,6 +824,7 @@ const SelectAll = () => {
                   }),
                 }).then((res) => {});
               }
+
               fetch(`https://programlist-backend.onrender.com/programs/${id}`, {
                 method: "PUT",
                 headers: {
@@ -697,7 +870,7 @@ const SelectAll = () => {
             type="submit"
             className="btn btn-outline-danger"
             onClick={(e) => {
-              closeToast();
+              setIsUpdate({ isUpdate: false });
             }}
           >
             Cancel
@@ -708,15 +881,28 @@ const SelectAll = () => {
   };
   return (
     <div className="selectAll main">
+      <Modal
+        isOpen={isInsert}
+        onRequestClose={!isInsert}
+        contentLabel="Custom Notification"
+      >
+        <div>
+          <InsertToast />
+        </div>
+      </Modal>
+      <Modal
+        isOpen={isUpdate.isUpdate}
+        onRequestClose={!isUpdate.isUpdate}
+        contentLabel="Custom Notification"
+      >
+        <div>
+          <UpdateToast />
+        </div>
+      </Modal>
       <ToastContainer
         enableMultiContainer
         containerId={"deleteAlert"}
         className="custom-toast-container rounded-5 deleteAlert"
-      />
-      <ToastContainer
-        enableMultiContainer
-        containerId={"insertUpdate"}
-        className="custom-toast-container insertUpdateToastContainer"
       />
       <div className="d-flex justify-content-between flex-wrap">
         <div>
@@ -800,19 +986,7 @@ const SelectAll = () => {
             className="btn btn-outline-success rounded-3 m-2"
             id="addBtn"
             onClick={() => {
-              toast.info(<InsertToast />, {
-                className: "insertToast",
-                closeButton: false,
-                icon: false,
-                containerId: "insertUpdate",
-                position: toast.POSITION.TOP_CENTER,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                autoClose: false,
-                theme: "light",
-              });
+              setIsInsert(true);
             }}
           >
             <ion-icon name="add-outline"></ion-icon>
@@ -820,7 +994,7 @@ const SelectAll = () => {
         </div>
       </div>
       <div className="table-responsive">
-        <table class="table table-borderless">
+        <table className="table table-borderless">
           <thead>
             <tr>
               <th scope="col"></th>

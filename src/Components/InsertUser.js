@@ -16,13 +16,13 @@ const InsertUser = () => {
 
   return (
     <div className="main my-5 mx-5 w-75">
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           User Name
         </label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           id="exampleFormControlInput1"
           placeholder="User Name"
           value={newUser.user_Name}
@@ -31,13 +31,13 @@ const InsertUser = () => {
           }}
         />
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Password
         </label>
         <input
           type="password"
-          class="form-control"
+          className="form-control"
           id="exampleFormControlInput1"
           placeholder="Password"
           value={newUser.user_Password}
@@ -46,13 +46,13 @@ const InsertUser = () => {
           }}
         />
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Email Address
         </label>
         <input
           type="email"
-          class="form-control"
+          className="form-control"
           id="exampleFormControlInput1"
           placeholder="Email Address"
           value={newUser.user_EmailAddress}
@@ -61,13 +61,13 @@ const InsertUser = () => {
           }}
         />
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Mobile Number
         </label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           id="exampleFormControlInput1"
           placeholder="Mobile Number"
           value={newUser.user_MobileNumber}
@@ -76,7 +76,7 @@ const InsertUser = () => {
           }}
         />
       </div>
-      <div class="mb-3">
+      <div className="mb-3">
         <button
           type="submit"
           className="mx-5 btn btn-outline-success"

@@ -92,36 +92,36 @@ const Home = () => {
     let arr = programs.filter((program)=>program.program_topic === obj);
     let programCount = arr.length;
     return (
-      <div class="card">
+      <div className="card">
         <div>
-          <div class="cardNumber" data-val={programCount}>
+          <div className="cardNumber" data-val={programCount}>
             {programCount}
           </div>
         </div>
-        <div class="cardName">{obj}</div>
+        <div className="cardName">{obj}</div>
       </div>
     );
   });
 
   return (
     <div>
-      <div class="cardBox text-center">
+      <div className="cardBox text-center">
         {cardsOfCount}
-        <div class="card">
+        <div className="card">
           {/* <div> */}
-          <div class="cardNumber" data-val={programs.length}>
+          <div className="cardNumber" data-val={programs.length}>
             {programs.length}
           </div>
-          <div class="cardName">Total Questions</div>
+          <div className="cardName">Total Questions</div>
           {/* </div> */}
         </div>
       </div>
-      <div class="homePart d-flex flex-wrap">
-        <div class="userFeedback">
+      <div className="homePart d-flex flex-wrap">
+        <div className="userFeedback">
           <h4>Login User Inforamation</h4>
           <div className="table-responsive">
             <table
-              class="table text-center my-3"
+              className="table text-center my-3"
               cellpadding="40px"
               cellspacing="40px"
             >
@@ -160,10 +160,10 @@ const Home = () => {
             </table>
           </div>
         </div>
-        <div class="recentUser">
+        <div className="recentUser">
           <h4>Recent Admin User</h4>
           <table
-            class="table text-center my-3"
+            className="table text-center my-3"
             cellpadding="40px"
             cellspacing="40px"
           >

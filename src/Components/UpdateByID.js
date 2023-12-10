@@ -64,13 +64,13 @@ const UpdateByID = () => {
 
   return (
     <div className="main my-5 mx-5 w-75">
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Program Name
         </label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           id="exampleFormControlInput1"
           placeholder="Program Name"
           value={newProgram.program_name}
@@ -79,8 +79,8 @@ const UpdateByID = () => {
           }}
         />
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Program Topic
         </label>
         <select
@@ -99,7 +99,7 @@ const UpdateByID = () => {
         <input
           required
           type="text"
-          class="form-control"
+          className="form-control"
           id="textBoxForTopic"
           style={{ display: "none" }}
           placeholder="Program Topic"
@@ -132,13 +132,13 @@ const UpdateByID = () => {
           }}
         ></input>
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Program Link
         </label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           id="exampleFormControlInput1"
           placeholder="Program Link"
           value={newProgram.program_link}
@@ -147,13 +147,13 @@ const UpdateByID = () => {
           }}
         />
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Solution Link
         </label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           id="exampleFormControlInput1"
           placeholder="Solution Link"
           value={newProgram.solution_link}
@@ -162,12 +162,12 @@ const UpdateByID = () => {
           }}
         />
       </div>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">
+      <div className="mb-3">
+        <label for="exampleFormControlInput1" className="form-label">
           Difficulty
         </label>
         <select
-          class="form-control"
+          className="form-control"
           value={newProgram.difficulty}
           onChange={(e) => {
             setNewProgram({
@@ -182,7 +182,7 @@ const UpdateByID = () => {
           <option>Hard</option>
         </select>
       </div>
-      <div class="mb-3">
+      <div className="mb-3">
         <button
           type="submit"
           className="mx-5 btn btn-outline-success"

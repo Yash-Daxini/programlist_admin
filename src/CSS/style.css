@@ -587,19 +587,23 @@ table {
     .backgroundColorBlueLite {
         width: 80%;
     }
+
     .navigation {
         position: absolute;
         width: 0px;
         height: 0px;
         text-align: center;
     }
+
     .navigation ul {
         margin-left: 50px;
     }
-    .navigation ul li .icon{
+
+    .navigation ul li .icon {
         font-size: 20px;
     }
-    .navigation ul li .title{
+
+    .navigation ul li .title {
         font-size: 22px;
         letter-spacing: 2px;
     }
@@ -639,9 +643,11 @@ table {
     .main {
         width: 80%;
     }
+
     .navigation ul {
         padding-left: 35%;
     }
+
     .navigation ul li .icon {
         font-size: 40px;
     }
@@ -731,6 +737,7 @@ table {
     .navigation ul li .title h3 {
         font-size: 25px;
     }
+
     .main.active .topbar .user {
         display: none;
     }
@@ -803,11 +810,13 @@ table {
         flex-wrap: wrap;
     }
 }
+
 @media (max-width:500px) {
-    .main{
+    .main {
         margin-left: 1vw;
         margin-right: 1vw;
     }
+
     .main .topbar .logoName {
         margin: 0;
         padding: 0;
@@ -816,28 +825,34 @@ table {
     .main .topbar .logo ion-icon {
         font-size: 2px;
     }
+
     .main .topbar .name {
         font-size: 20px;
     }
-    .selectAll{
+
+    .selectAll {
         margin-left: 2.5px;
         margin-right: 2.5px;
         padding: 5px;
     }
-    .selectAll table{
+
+    .selectAll table {
         font-size: 7px;
         letter-spacing: .3px;
     }
 }
+
 /* Toast Styles  */
-.deleteAlert{
+.deleteAlert {
     border-radius: 30px;
 }
-.insertUpdateToastContainer{
+
+.insertUpdateToastContainer {
     width: 75%;
+    overflow-y: scroll;
 }
-@media only screen and (max-width:600px){
-    .insertUpdateToastContainer{
+@media only screen and (max-width:600px) {
+    .insertUpdateToastContainer {
         width: 100%;
         color: red;
     }

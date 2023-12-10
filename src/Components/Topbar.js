@@ -18,13 +18,13 @@ const Topbar = () => {
 
   return (
     <>
-      <div class="topbar">
-        <div class="toggle" onClick={toggleMenu}></div>
-        <div class="logoName">
-          <div class="logo">
-            {/* <ion-icon class="ion" name="book-outline"></ion-icon> */}
+      <div className="topbar">
+        <div className="toggle" onClick={toggleMenu}></div>
+        <div className="logoName">
+          <div className="logo">
+            {/* <ion-icon className="ion" name="book-outline"></ion-icon> */}
           </div>
-          <div class="name">ProgramList</div>
+          <div className="name">ProgramList</div>
         </div>
         {/* <button className="themeBtn w-25 h-75 darkTheme" onClick={(e)=>{
           e.target.classList.toggle("darkTheme");
@@ -33,14 +33,14 @@ const Topbar = () => {
           document.getElementsByClassName("main")[0].classList.toggle("darkTheme");
         }}>Change theme</button> */}
         <div>
-          <button class="logout btn border-0 text-primary" onClick={(e)=>{
+          <button className="logout btn border-0 text-primary" onClick={(e)=>{
             sessionStorage.clear();
             naviagate("./login");
           }}>
             <ion-icon name="log-out-outline"></ion-icon>
           </button>
         </div>
-        {/* <div class="user">
+        {/* <div className="user">
           <ion-icon name="person-circle-outline"></ion-icon>
         </div> */}
       </div>
