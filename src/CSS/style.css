@@ -577,6 +577,14 @@ table .content:hover {
     margin-top: 20px;
 }
 
+.description {
+    width: 30%;
+}
+
+.compiler {
+    width: 60%;
+}
+
 table {
     border-collapse: separate;
     border-spacing: 0 1em;
@@ -589,6 +597,15 @@ table {
 }
 
 @media only screen and (max-width: 600px) {
+    .description {
+        width: 80%;
+    }
+
+    .compiler {
+        width: 80%;
+        border: none;
+    }
+
     .backgroundColorBlueLite {
         width: 80%;
     }

@@ -52,9 +52,9 @@ const SelectByID = () => {
     <>
       <h4 className="my-5">{programObj.program_name}</h4>
       {!isLoading ? (
-        <div className="container-fluid d-flex flex-wrap justify-content-center align-items-center gap-5 align-items-center my-5">
-          <div className="w-25">
-            <div className="my-5 d-flex justify-content-center align-items-center flex-wrap gap-5">
+        <div className="d-flex flex-wrap justify-content-center gap-5 my-2">
+          <div className="description">
+            <div className="mb-5 d-flex justify-content-center align-items-center flex-wrap gap-5">
               {programObj.difficulty === "Easy" ? (
                 <h4 className="customBadgeSuccess">
                   <span className="">{programObj.difficulty}</span>
@@ -115,7 +115,7 @@ const SelectByID = () => {
             </div>
             <div className="my-5 d-flex justify-content-center align-items-center"></div>
           </div>
-          <div className="bg-dark w-50">
+          <div className="bg-dark compiler">
             <div data-pym-src="https://www.jdoodle.com/plugin/v0/2e28a111104a265988dbce9b3f71a0ef/2dfd313b1308059a6006df5a0de7cf4e"></div>
           </div>
         </div>
