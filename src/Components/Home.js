@@ -6,6 +6,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   // const [totalProgram,setTotalProgram] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (sessionStorage.getItem("user") == null) {
@@ -20,6 +21,7 @@ const Home = () => {
       })
       .then((data) => {
         setUsers(data);
+        setIsLoading(false);
       })
       .catch((e) => {});
   }, []);
@@ -62,18 +64,32 @@ const Home = () => {
 
   let setForTopics = new Set();
 
-  programs.forEach(element => {
+  programs.forEach((element) => {
     setForTopics.add(element.program_topic);
   });
 
   let topicsArr = [];
 
-  setForTopics.forEach(element => {
+  setForTopics.forEach((element) => {
     topicsArr.push(element);
   });
 
+  const placeholderForDisapayAdminUser = [];
 
-  const dispayAdminUser = users.map((user) => {
+  for (let i = 0; i < 3; i++) {
+    placeholderForDisapayAdminUser.push(
+      <tr>
+        <td className="placeholder-glow w-100">
+          <span className="placeholder col-6"></span>
+        </td>
+        <td className="placeholder-glow w-100">
+          <span className="placeholder col-6"></span>
+        </td>
+      </tr>
+    );
+  }
+
+  const displayAdminUser = users.map((user) => {
     return (
       <>
         <tr>
@@ -88,8 +104,18 @@ const Home = () => {
     );
   });
 
+  const placeholderForCardOfCount = [];
+
+  for (let i = 0; i < 8; i++) {
+    placeholderForCardOfCount.push(
+      <div className="placeholder-glow w-100">
+          <span className="placeholder col-12" style={{height:"100px"}}></span>
+      </div>
+    );
+  }
+
   const cardsOfCount = topicsArr.map((obj) => {
-    let arr = programs.filter((program)=>program.program_topic === obj);
+    let arr = programs.filter((program) => program.program_topic === obj);
     let programCount = arr.length;
     return (
       <div className="card">
@@ -106,15 +132,19 @@ const Home = () => {
   return (
     <div>
       <div className="cardBox text-center">
-        {cardsOfCount}
-        <div className="card">
-          {/* <div> */}
-          <div className="cardNumber" data-val={programs.length}>
-            {programs.length}
-          </div>
-          <div className="cardName">Total Questions</div>
-          {/* </div> */}
-        </div>
+        {isLoading ? (
+          placeholderForCardOfCount
+        ) : (
+          <>
+            {cardsOfCount}
+            <div className="card">
+              <div className="cardNumber" data-val={programs.length}>
+                {programs.length}
+              </div>
+              <div className="cardName">Total Questions</div>
+            </div>
+          </>
+        )}
       </div>
       <div className="homePart d-flex flex-wrap">
         <div className="userFeedback">
@@ -134,8 +164,18 @@ const Home = () => {
               </thead>
               <tbody>
                 <tr>
-                  {sessionStorage.getItem("user") === null ? (
-                    <td></td>
+                  {sessionStorage.getItem("user") === null || isLoading ? (
+                    <>
+                      <td className="placeholder-glow w-100">
+                        <span className="placeholder col-6"></span>
+                      </td>
+                      <td className="placeholder-glow w-100">
+                        <span className="placeholder col-6"></span>
+                      </td>
+                      <td className="placeholder-glow w-100">
+                        <span className="placeholder col-6"></span>
+                      </td>
+                    </>
                   ) : (
                     <>
                       <td>
@@ -174,7 +214,7 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {dispayAdminUser}
+              {isLoading ? placeholderForDisapayAdminUser : displayAdminUser}
             </tbody>
           </table>
         </div>
