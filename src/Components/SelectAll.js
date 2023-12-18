@@ -17,6 +17,7 @@ const SelectAll = () => {
   const [filterArr, setFilterArr] = useState([]);
   const [isInsert, setIsInsert] = useState(false);
   const [isUpdate, setIsUpdate] = useState({ isUpdate: false });
+  const [isLoading, setIsLoading] = useState(true);
   let isTopicPresent = true;
   useEffect(() => {
     if (sessionStorage.getItem("user") === null) {
@@ -32,6 +33,7 @@ const SelectAll = () => {
       .then((data) => {
         setProgramObj(data);
         setFilterArr(data);
+        setIsLoading(false);
       })
       .catch((e) => {});
   };
@@ -203,6 +205,36 @@ const SelectAll = () => {
       </>
     );
   });
+
+  const placeholderForAllPrograms = [];
+
+  for (let i = 0; i < 9; i++) {
+    placeholderForAllPrograms.push(
+      <tr>
+        <td className="placeholder-glow">
+          <span className="placeholder col-12"></span>
+        </td>
+        <td className="placeholder-glow w-25">
+          <span className="placeholder col-12"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-6"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-4"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-4"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-3"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-1"></span>
+        </td>
+      </tr>
+    );
+  }
 
   const DeleteButtonToast = ({ closeToast }) => {
     return (
@@ -994,21 +1026,39 @@ const SelectAll = () => {
         </div>
       </div>
       <div className="table-responsive">
-        <table className="table table-borderless">
-          <thead>
-            <tr>
-              <th scope="col"></th>
-              <th scope="col">Name</th>
-              <th scope="col">Topic</th>
-              <th scope="col">Program Link</th>
-              <th scope="col">Solution Link</th>
-              <th scope="col">Difficulty</th>
-              <th scope="col" colSpan={2}>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          {allPrograms.length === 0 ? (
+        {isLoading ? (
+          <table className="table table-borderless">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Topic</th>
+                <th scope="col">Program Link</th>
+                <th scope="col">Solution Link</th>
+                <th scope="col">Difficulty</th>
+                <th scope="col" colSpan={2}>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>{placeholderForAllPrograms}</tbody>
+          </table>
+        ) : (
+          <table className="table table-borderless">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Topic</th>
+                <th scope="col">Program Link</th>
+                <th scope="col">Solution Link</th>
+                <th scope="col">Difficulty</th>
+                <th scope="col" colSpan={2}>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            {allPrograms.length === 0 ? (
             <tbody>
               <tr>
                 <td colSpan={6}>
@@ -1016,10 +1066,9 @@ const SelectAll = () => {
                 </td>
               </tr>
             </tbody>
-          ) : (
-            <tbody className="text-center">{allPrograms}</tbody>
-          )}
-        </table>
+            ) : (<tbody className="text-center">{allPrograms}</tbody>)}
+          </table>
+        )}
       </div>
     </div>
   );

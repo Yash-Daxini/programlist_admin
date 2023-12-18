@@ -1,30 +1,58 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const SelectByTopicName = () => {
-
   const params = useParams();
 
   const [progams, setProgams] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    if( sessionStorage.getItem("user") === null ){
+    if (sessionStorage.getItem("user") === null) {
       navigate("../login");
     }
-  }, [navigate])
+  }, [navigate]);
 
   useEffect(() => {
-    fetch(`https://programlist-backend.onrender.com/programs/topics/${params.name}`)
+    fetch(
+      `https://programlist-backend.onrender.com/programs/topics/${params.name}`
+    )
       .then((res) => {
         return res.json();
       })
       .then((data) => {
         setProgams(data);
+        setIsLoading(false);
       })
       .catch((e) => {});
-  }, [params.name,params.id])
+  }, [params.name, params.id]);
+
+  const placeholderForAllPrograms = [];
+
+  for (let i = 0; i < 9; i++) {
+    placeholderForAllPrograms.push(
+      <tr>
+        <td className="placeholder-glow w-25">
+          <span className="placeholder col-12"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-6"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-4"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-4"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-3"></span>
+        </td>
+      </tr>
+    );
+  }
 
   const allPrograms = progams.map((program) => {
     return (
@@ -54,11 +82,10 @@ const SelectByTopicName = () => {
       </>
     );
   });
-  
 
   return (
     <div className="selectAll main">
-      <h1 style={{textTransform:"capitalize"}}>{params.name}</h1>
+      <h1 style={{ textTransform: "capitalize" }}>{params.name}</h1>
       <div>
         <table className="table">
           <thead>
@@ -70,11 +97,11 @@ const SelectByTopicName = () => {
               <th scope="col">Difficulty</th>
             </tr>
           </thead>
-          <tbody>{allPrograms}</tbody>
+          <tbody>{ isLoading ? placeholderForAllPrograms :  allPrograms}</tbody>
         </table>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SelectByTopicName
+export default SelectByTopicName;

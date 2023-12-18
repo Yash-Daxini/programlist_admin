@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const SelectAllTopic = () => {
   const [topicObj, setTopicObj] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -20,21 +21,22 @@ const SelectAllTopic = () => {
       })
       .then((data) => {
         setTopicObj(data);
+        setIsLoading(false);
       })
       .catch((e) => {});
   }, []);
 
   let setForTopic = new Set();
 
-  topicObj.forEach((element)=>{
+  topicObj.forEach((element) => {
     setForTopic.add(element.program_topic);
   });
 
   let topicsArray = [];
 
-  setForTopic.forEach((element)=>{
+  setForTopic.forEach((element) => {
     topicsArray.push(element);
-  })
+  });
 
   const allTopics = topicsArray.map((topic) => {
     return (
@@ -42,7 +44,7 @@ const SelectAllTopic = () => {
         <tr>
           <td>
             <Link
-              to={"./SelectByTopicName/"+ topic}
+              to={"./SelectByTopicName/" + topic}
               style={{ textDecoration: "none" }}
             >
               {topic}
@@ -52,6 +54,18 @@ const SelectAllTopic = () => {
       </>
     );
   });
+
+  const placeholderForAllTopics = [];
+
+  for (let i = 0; i < 9; i++) {
+    placeholderForAllTopics.push(
+      <tr>
+        <td className="placeholder-glow w-25">
+          <span className="placeholder col-8" style={{height:"30px"}}></span>
+        </td>
+      </tr>
+    );
+  }
 
   return (
     <div className="selectAll main">
@@ -67,7 +81,7 @@ const SelectAllTopic = () => {
               <th scope="col">Name</th>
             </tr>
           </thead>
-          <tbody>{allTopics}</tbody>
+          <tbody>{isLoading ? placeholderForAllTopics : allTopics}</tbody>
         </table>
       </div>
     </div>

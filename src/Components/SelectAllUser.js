@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 const SelectAllUser = () => {
   const [userObj, setUserObj] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -15,13 +16,13 @@ const SelectAllUser = () => {
   }, [navigate]);
 
   useEffect(() => {
-    // fetch("https://localhost:5001/api/SEC_User")
     fetch("https://programlist-backend.onrender.com/user")
       .then((res) => {
         return res.json();
       })
       .then((data) => {
         setUserObj(data);
+        setIsLoading(false);
       })
       .catch((e) => {});
   }, []);
@@ -100,6 +101,33 @@ const SelectAllUser = () => {
     );
   });
 
+  const placeholderForAllUser = [];
+
+  for (let i = 0; i < 9; i++) {
+    placeholderForAllUser.push(
+      <tr>
+        <td className="placeholder-glow">
+          <span className="placeholder col-12"></span>
+        </td>
+        <td className="placeholder-glow w-25">
+          <span className="placeholder col-12"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-6"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-4"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-4"></span>
+        </td>
+        <td className="placeholder-glow">
+          <span className="placeholder col-3"></span>
+        </td>
+      </tr>
+    );
+  }
+
   return (
     <div className="selectAll main">
       <div className="d-flex justify-content-between">
@@ -125,7 +153,7 @@ const SelectAllUser = () => {
               </th>
             </tr>
           </thead>
-          <tbody>{allUser}</tbody>
+          <tbody>{isLoading ? placeholderForAllUser : allUser}</tbody>
         </table>
       </div>
     </div>

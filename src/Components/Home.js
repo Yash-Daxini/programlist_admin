@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
-  // const [totalProgram,setTotalProgram] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -59,8 +58,6 @@ const Home = () => {
       })
       .catch((e) => {});
   }, []);
-
-  // setTotalProgram(programs.length);
 
   let setForTopics = new Set();
 
