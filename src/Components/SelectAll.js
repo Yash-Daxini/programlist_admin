@@ -55,39 +55,46 @@ const SelectAll = () => {
   });
 
   let deleteFromArray = () => {
+    let allDeleted = true;
     deleteArr.forEach((element) => {
-      Delete(element.id, element.topic);
+      let isDeleted = Delete(element.id, element.topic);
+      allDeleted &= isDeleted;
     });
+    if (allDeleted) {
+      navigate("../");
+      setTimeout(() => {
+        Swal.fire("Deleted!", "Your data has been deleted.", "success");
+        navigate("../SelectAll");
+      }, 0.01);
+    } else {
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "Some error occured!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
 
   const Delete = (id, topic) => {
+    let isDelete = true;
     if (programObj.filter((ele) => ele.program_topic === topic).length === 1) {
       fetch(
         `https://programlist-backend.onrender.com/topic/deleteFromTopic/${topic}`,
         {
           method: "DELETE",
         }
-      ).then((res) => {});
+      ).catch(() => {
+        isDelete = false;
+      });
     }
     fetch(`https://programlist-backend.onrender.com/programs/${id}`, {
       method: "DELETE",
-    })
-      .then((resp) => {
-        navigate("../");
-        setTimeout(() => {
-          Swal.fire("Deleted!", "Your data has been deleted.", "success");
-          navigate("../SelectAll");
-        }, 0.01);
-      })
-      .catch((e) => {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: "Some error occured!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      });
+    }).catch(() => {
+      isDelete = false;
+    });
+    return isDelete;
   };
 
   const allTopicsName = topicObj.map((topic) => {
@@ -392,7 +399,7 @@ const SelectAll = () => {
         <div className="form-floating mb-3">
           <textarea
             required
-            rows={"4"}
+            rows={"12"}
             className="form-control h-100"
             id="floatingInput"
             placeholder="Description"
@@ -406,6 +413,25 @@ const SelectAll = () => {
           />
           <label for="floatingInput" className="form-label">
             Description
+          </label>
+        </div>
+        <div className="form-floating mb-3">
+          <textarea
+            required
+            rows={"12"}
+            className="form-control h-100"
+            id="floatingInput"
+            placeholder="Description"
+            value={newProgram.program_solution}
+            onChange={(e) => {
+              setNewProgram({
+                ...newProgram,
+                program_solution: e.target.value,
+              });
+            }}
+          />
+          <label for="floatingInput" className="form-label">
+            Solution
           </label>
         </div>
         <div className="form-floating mb-3">
@@ -494,6 +520,7 @@ const SelectAll = () => {
                 newProgram.solution_link === undefined ||
                 newProgram.difficulty === undefined ||
                 newProgram.program_description === undefined ||
+                newProgram.program_solution === undefined ||
                 newProgram.program_testcases.input === undefined ||
                 newProgram.program_testcases.output === undefined ||
                 newProgram.difficulty === "Select Difficulty"
@@ -702,7 +729,7 @@ const SelectAll = () => {
         <div className="form-floating mb-3">
           <textarea
             required
-            rows={"4"}
+            rows={"12"}
             className="form-control h-100"
             id="floatingInput"
             placeholder="Description"
@@ -716,6 +743,25 @@ const SelectAll = () => {
           />
           <label for="floatingInput" className="form-label">
             Description
+          </label>
+        </div>
+        <div className="form-floating mb-3">
+          <textarea
+            required
+            rows={"12"}
+            className="form-control h-100"
+            id="floatingInput"
+            placeholder="Description"
+            value={newProgram.program_solution}
+            onChange={(e) => {
+              setNewProgram({
+                ...newProgram,
+                program_solution: e.target.value,
+              });
+            }}
+          />
+          <label for="floatingInput" className="form-label">
+            Solution
           </label>
         </div>
         <div className="form-floating mb-3">
@@ -812,6 +858,8 @@ const SelectAll = () => {
                 newProgram.program_topic === "" ||
                 newProgram.program_link === undefined ||
                 newProgram.solution_link === undefined ||
+                newProgram.program_description === undefined ||
+                newProgram.program_solution === undefined ||
                 newProgram.program_testcases.input === undefined ||
                 newProgram.program_testcases.output === undefined ||
                 newProgram.difficulty === "Select Difficulty"
@@ -1059,14 +1107,16 @@ const SelectAll = () => {
               </tr>
             </thead>
             {allPrograms.length === 0 ? (
-            <tbody>
-              <tr>
-                <td colSpan={6}>
-                  <h3>No match found</h3>
-                </td>
-              </tr>
-            </tbody>
-            ) : (<tbody className="text-center">{allPrograms}</tbody>)}
+              <tbody>
+                <tr>
+                  <td colSpan={6}>
+                    <h3>No match found</h3>
+                  </td>
+                </tr>
+              </tbody>
+            ) : (
+              <tbody className="text-center">{allPrograms}</tbody>
+            )}
           </table>
         )}
       </div>
